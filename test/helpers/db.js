@@ -58,4 +58,4 @@ const loadTable = () => {
 
 const resetTable = () => truncateTable().then(() => loadTable());
 
-module.exports = { resetTable };
+module.exports = { truncateTable, resetTable };

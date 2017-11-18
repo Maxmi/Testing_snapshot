@@ -10,24 +10,22 @@ const {
   search,
 } = require('../../../src/models/db/contacts');
 
-const { resetTable } = require('../../helpers/db');
+const { truncateTable, resetTable } = require('../../helpers/db');
 
 
 describe('database queries', () => {
-  // run this test while db is empty
+
   describe('findAll', () => {
     context('when table is empty', () => {
       it('should return zero results', () => {
-        // no need to use done(), just put return before function call
         return findAll()
           .then((contacts) => {
             expect(contacts.length).to.equal(0);
-            // done();
           })
       });
     });
+
     context('when table is not empty', () => {
-      //use this for all other tests - do I need to add it into each context?
       beforeEach(() => {
         return resetTable()
       });
@@ -46,7 +44,6 @@ describe('database queries', () => {
       it('should return a contact with given id', () => {
         return findById(1)
           .then((contact) => {
-            // expect(contact).to.be.true;
             expect(contact.first_name).to.equal('Jared');
             expect(contact.last_name).to.equal('Grippe');
           });
@@ -54,25 +51,27 @@ describe('database queries', () => {
     });
   });
 
-/*
+
   describe('search', () => {
-    context('when contact name is typed in search field', () => {
-      it('should return that contact', () => {
-        return search('Jared Gripper')
-          .then((contact) => {
-            // expect(contact).to.be.ok;
+    context('when a string is typed in search field', () => {
+      it('should return list of contacts that fully or partially match entered string', () => {
+        return search('tan')
+          .then((contacts) => {
+            expect([{ first_name: 'Tanner' }]).to.deep.include.members([{ first_name: 'Tanner' }]);
           });
       });
     });
   });
 
 
+
+
+
   describe('create', () => {
     context('when form is filled and submitted', () => {
-      it('should save contact in db', () => {
-        return create('Test Tester')
+      it('should save new contact in db', () => {
+        return create(('Test', 'Tester'))
           .then((contact) => {
-            // expect('Test Tester').to.exist;
             expect(contact.id).to.equal(4);
           });
       });
@@ -83,15 +82,12 @@ describe('database queries', () => {
   describe('destroy', () => {
     context('when delete button clicked for a contact', () => {
       it('should be deleted from db', () => {
-        return destroy('Test Tester')
+        return destroy(1)
           .then((contact) => {
-            expect(contact).to.be.null;
+            expect(contact.id).to.equal(undefined);
           });
       });
     });
   });
-
-
-*/
 
 }); //end of most outer describe

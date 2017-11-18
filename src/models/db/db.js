@@ -5,7 +5,7 @@ const pgp = require('pg-promise')()
 const connectionString = {
   host: 'localhost',
   port: 5432,
-  database: process.env.NODE_ENV === 'test' ? 'contacts_test' : 'contacts'
+  database: process.env.NODE_ENV === 'test' ? 'contacts_test' : 'contacts_development'
 }
 
 const db = pgp(connectionString)
