@@ -10,10 +10,12 @@ const {
   search,
 } = require('../../../src/models/db/contacts');
 
+const { resetTable } = require('../../helpers/db');
+
 
 describe('database queries', () => {
   // run this test while db is empty
-  describe.only('findAll', () => {
+  describe('findAll', () => {
     context('when table is empty', () => {
       it('should return zero results', () => {
         // no need to use done(), just put return before function call
@@ -24,16 +26,11 @@ describe('database queries', () => {
           })
       });
     });
-  });
-
-  //use this for all other tests 
-  beforeEach(() => {
-    //truncateTables
-    //seed init data
-  });
-
-  describe('findAll', () => {
     context('when table is not empty', () => {
+      //use this for all other tests - do I need to add it into each context?
+      beforeEach(() => {
+        return resetTable()
+      });
       it('should return all contacts', () => {
         return findAll()
           .then((contacts) => {
@@ -49,13 +46,15 @@ describe('database queries', () => {
       it('should return a contact with given id', () => {
         return findById(1)
           .then((contact) => {
-            expect(contact).to.equal('Jared Grippe');
+            // expect(contact).to.be.true;
+            expect(contact.first_name).to.equal('Jared');
+            expect(contact.last_name).to.equal('Grippe');
           });
       });
     });
   });
 
-
+/*
   describe('search', () => {
     context('when contact name is typed in search field', () => {
       it('should return that contact', () => {
@@ -93,6 +92,6 @@ describe('database queries', () => {
   });
 
 
-
+*/
 
 }); //end of most outer describe
