@@ -9,7 +9,11 @@
     "db:reset": "dropdb contacts_development && createdb contacts_development && npm run load_schema",
     "load_schema": "psql -d contacts_development < src/models/db/schema/schema.sql",
     "load_contacts": "psql -d contacts_development < test/seed/contacts.sql",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:db:drop": "dropdb contacts_test",
+    "test:db:create": "createdb contacts_test",
+    "test:db:load_schema": "psql -d contacts_test < src/models/db/schema/schema.sql",
+    "test:db:reset": "npm run test:db:drop && npm run test:db:create && npm run test:db:load_schema",
+    "test": "export NODE_ENV=test && npm run test:db:reset && mocha test/integration/db/contacts.test.js --exit"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +25,16 @@
     "pg-promise": "^6.2.1"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "ajv": "^5.3.0",
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.11.0",
+    "pg-monitor": "^0.8.3"
   }
 }

@@ -8,5 +8,5 @@ module.exports = {
   findAll: db.findAll,
   findById: db.findById,
   destroy: db.destroy,
-  search: db.search
-}
+  search: db.search,
+};

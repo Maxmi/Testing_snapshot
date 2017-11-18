@@ -3,17 +3,19 @@ const errorHandler = (error, request, response, next) => {
 };
 
 const logErrors = (error, request, response, next) => {
-  console.error(error.stack)
+  console.error(error.stack);
   next(error);
 };
 
 const notFoundHandler = (request, response) => {
-  response.status(404).render('common/not_found')
-}
+  response.status(404).render('common/not_found');
+};
 
 const setDefaultResponseLocals = (request, response, next) => {
-  response.locals.query = ''
-  next()
-}
+  response.locals.query = '';
+  next();
+};
 
-module.exports = { errorHandler, logErrors, notFoundHandler, setDefaultResponseLocals };
+module.exports = {
+  errorHandler, logErrors, notFoundHandler, setDefaultResponseLocals,
+};
