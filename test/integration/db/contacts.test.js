@@ -1,6 +1,6 @@
 // const db = require('./db');
-const expect = require('chai').expect;
-const pg = require('pg-promise')();
+const { expect } = require('chai');
+// const pg = require('pg-promise')();
 
 const {
   create,
@@ -10,7 +10,7 @@ const {
   search,
 } = require('../../../src/models/db/contacts');
 
-const { truncateTable, resetTable } = require('../../helpers/db');
+const { resetTable } = require('../../helpers/db');
 
 
 describe('database queries', () => {
@@ -63,16 +63,17 @@ describe('database queries', () => {
     });
   });
 
-
-
-
-
   describe('create', () => {
-    context('when form is filled and submitted', () => {
+    context('when new contact form is submitted', () => {
       it('should save new contact in db', () => {
-        return create(('Test', 'Tester'))
+        return create({
+          first_name: 'test',
+          last_name: 'tester'
+        })
           .then((contact) => {
-            expect(contact.id).to.equal(4);
+            // expect(contact.first_name).to.eql('test');
+            // expect(contact.last_name).to.eql('tester');
+            expect(contact).to.exist;
           });
       });
     });
