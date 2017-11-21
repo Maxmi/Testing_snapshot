@@ -9,6 +9,7 @@ router.get('/new', (request, response) => {
 router.post('/', (request, response, next) => {
   contacts.create(request.body)
     .then((contact) => {
+      // console.log('this is contact', contact);
       if (contact) return response.redirect(`/contacts/${contact[0].id}`);
       next();
     })

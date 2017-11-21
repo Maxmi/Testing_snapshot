@@ -13,7 +13,7 @@
     "test:db:create": "createdb contacts_test",
     "test:db:load_schema": "psql -d contacts_test < src/models/db/schema/schema.sql",
     "test:db:reset": "npm run test:db:drop && npm run test:db:create && npm run test:db:load_schema",
-    "test": "export NODE_ENV=test && npm run test:db:reset && mocha test/integration/db/contacts.test.js --exit"
+    "test": "export NODE_ENV=test && npm run test:db:reset && mocha --recursive --exit"
   },
   "keywords": [],
   "author": "",
