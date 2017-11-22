@@ -1,79 +1,129 @@
-// const path = require('path');
-// const Nightmare = require('nightmare');
+const path = require('path');
+const Nightmare = require('nightmare');
 // const nightmare = Nightmare();
-// const {expect} = require('chai');
-//
-// describe('Nightmare tests', function () {
-//
-//   this.timeout(15000);
-//
-//   const url = 'http://localhost:3000';
-//
-//   describe('home page', function () {
-//     it('should get title of the home page', function (done) {
-//       nightmare
-//         .goto(url)
-//         .evaluate(() => {
-//           return document.title;
-//         })
-//         .end()
-//         .then(title => {
-//           expect(title).to.equal('Contacts');
-//           done();
-//         });
-//     });
-//   });
-//
-//   describe('contacts home page', function () {
-//     it('should render all contacts', function (done) {
-//       nightmare
-//         .goto(url)
-//         .evaluate(() => {
-//           return document.getElementsByClassName('contact-list-member');
-//         })
-//         .end()
-//         .then(list => {
-//           // expect(list).to.have.lengthOf(3);
-//           expect(list).to.exist;
-//           done();
-//         });
-//     });
-//   });
-//
-//
-//
-//   describe('new contact form page', function () {
-//     it('should render form to create new contact', function (done) {
-//       nightmare
-//         .goto(`${url}/contacts/new`)
-//         .evaluate(() => {
-//           return document.getElementById('new');
-//         })
-//         .end()
-//         .then(form => {
-//           expect(form).to.exist;
-//           done();
-//         });
-//     });
-//   });
-//
-//   describe('sending form', function () {
-//     it('should redirect and render created contact', function (done) {
-//       nightmare
-//         .goto(`${url}/contacts/new`)
-//         .type('input[name="first_name"]','bob')
-//         .type('input[name="last_name"]','ross')
-//         .click('input[type="submit"]')
-//         .wait(5000) //'.contact-show-page-controls'
-//         .evaluate(() => {
-//           return document.getElementsByTagName('h1')[0];
-//         })
-//         .end()
-//         .then(contact => {
-//           expect(contact.innerText).to.equal('bob ross');
-//           done();
-//         });
-//     });
-//   });
-//
-// }); //end of most outer describe
+const {expect} = require('chai');
+
+describe('Nightmare tests', function () {
+
+  this.timeout(15000);
+
+  const url = 'http://localhost:3000';
+
+  beforeEach(() => {
+    nightmare = new Nightmare();
+  });
+
+  describe('home page title', function () {
+    it('should get title of the home page', function (done) {
+      nightmare
+        .goto(url)
+        .evaluate(() => {
+          return document.title;
+        })
+        .end()
+        .then(title => {
+          expect(title).to.equal('Contacts');
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('contacts home page', function () {
+    it('should render all contacts', function (done) {
+      nightmare
+        .goto(url)
+        .evaluate(() => {
+          return document.getElementsByClassName('contact-list-member');
+        })
+        .end()
+        .then(list => {
+          expect(list).to.exist;
+          done();
+        })
+        .catch(done);
+
+    });
+  });
+
+
+
+  describe('new contact form page', function () {
+    it('should render form to create new contact', function (done) {
+      nightmare
+        .goto(`${url}/contacts/new`)
+        .evaluate(() => {
+          return document.getElementById('new'); //changed html
+        })
+        .end()
+        .then(form => {
+          expect(form).to.exist;
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('sending form', function () {
+    it('should redirect and render created contact', function (done) {
+      nightmare
+        .goto(`${url}/contacts/new`)
+        .type('input[name="first_name"]','test')
+        .type('input[name="last_name"]','tester')
+        .click('#addContact') //changed html
+        .wait(5000)
+        .evaluate(() => {
+          return document.querySelectorAll('.page-column-content > h1')[0].innerHTML; //innerText not working
+        })
+        .end()
+        .then(result => {
+          expect(result).to.equal('test&nbsp;tester');
+          // expect(result).to.equal('test tester'); //not working
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('deleting contact', function () {
+
+    // const nightmare = Nightmare({
+    //   webPreferences: {
+    //     preload: path.resolve('../../public/script.js')
+    //   }
+    // });
+    //
+
+    it('should delete the contact and redirect to contacts page', function (done) {
+        nightmare
+        .goto(`${url}/contacts/new`)
+        .type('input[name="first_name"]','test')
+        .type('input[name="last_name"]','tester')
+        .click('#addContact') //changed html
+        .wait(3000)
+        .click('#deleteCont') //changed html
+        //finding popup window and cliking OK button
+        .on('page', function(type="confirm", message, response) {
+          window.__nightmare = {};
+          __nightmare.ipc = require('electron').ipcRenderer;
+          window.confirm = function(message, defaultResponse) {
+            if(message === 'Are you sure you want to delete this contact?')
+              return true;
+            return defaultResponse;
+          }
+        })
+        .wait(3000)
+        .evaluate(() => {
+          return document.getElementsByClassName('contact-list');
+        })
+        .end()
+        .then(result => {
+          // console.log(result);
+          expect(result).to.be.empty;
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+}); //end of most outer describe
