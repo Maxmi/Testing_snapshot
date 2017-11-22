@@ -16,9 +16,8 @@ const truncateTable = () => db.none(`
     TRUNCATE ${table} RESTART IDENTITY;
   `);
 
-const seedFile = sql('../seed/contacts.sql');
-
 // reading data from external file
+const seedFile = sql('../seed/contacts.sql');
 const loadTable = () => db.none(seedFile);
 
 // in case we don't have external file with test data we could load them here

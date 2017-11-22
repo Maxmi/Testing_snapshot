@@ -1,6 +1,5 @@
 const path = require('path');
 const Nightmare = require('nightmare');
-// const nightmare = Nightmare();
 const {expect} = require('chai');
 
 describe('Nightmare tests', function () {
@@ -53,7 +52,7 @@ describe('Nightmare tests', function () {
       nightmare
         .goto(`${url}/contacts/new`)
         .evaluate(() => {
-          return document.getElementById('new'); //changed html
+          return document.getElementById('new'); //added Id into html
         })
         .end()
         .then(form => {
@@ -70,7 +69,7 @@ describe('Nightmare tests', function () {
         .goto(`${url}/contacts/new`)
         .type('input[name="first_name"]','test')
         .type('input[name="last_name"]','tester')
-        .click('#addContact') //changed html
+        .click('#addContact') //added Id into html
         .wait(5000)
         .evaluate(() => {
           return document.querySelectorAll('.page-column-content > h1')[0].innerHTML; //innerText not working
@@ -99,9 +98,9 @@ describe('Nightmare tests', function () {
         .goto(`${url}/contacts/new`)
         .type('input[name="first_name"]','test')
         .type('input[name="last_name"]','tester')
-        .click('#addContact') //changed html
+        .click('#addContact') //added Id into html
         .wait(3000)
-        .click('#deleteCont') //changed html
+        .click('#deleteCont') //added Id into html
         //finding popup window and cliking OK button
         .on('page', function(type="confirm", message, response) {
           window.__nightmare = {};
@@ -118,7 +117,6 @@ describe('Nightmare tests', function () {
         })
         .end()
         .then(result => {
-          // console.log(result);
           expect(result).to.be.empty;
           done();
         })

@@ -1,4 +1,4 @@
-# Contacts Snapshot starter project
+# My implementation of tests for Contacts Snapshot starter project
 
 ## Dev Setup
 
@@ -6,3 +6,4 @@
 1. Load your database with the schema: `npm run load_schema`
 1. Install your dependencies: `npm install`
 1. Run the server: `nodemon`
+1. To run tests = `npm test`
