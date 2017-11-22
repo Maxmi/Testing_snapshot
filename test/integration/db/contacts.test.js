@@ -1,6 +1,4 @@
-// const db = require('./db');
 const { expect } = require('chai');
-// const pg = require('pg-promise')();
 
 const {
   create,
@@ -10,13 +8,17 @@ const {
   search,
 } = require('../../../src/models/db/contacts');
 
-const { resetTable } = require('../../helpers/db');
+const { truncateTable, resetTable } = require('../../helpers/db');
 
 
 describe('database queries', () => {
 
   describe('findAll', () => {
     context('when table is empty', () => {
+      beforeEach(() => {
+        return truncateTable();
+      });
+
       it('should return zero results', () => {
         return findAll()
           .then((contacts) => {
@@ -27,7 +29,7 @@ describe('database queries', () => {
 
     context('when table is not empty', () => {
       beforeEach(() => {
-        return resetTable()
+        return resetTable();
       });
       it('should return all contacts', () => {
         return findAll()
@@ -42,7 +44,7 @@ describe('database queries', () => {
   describe('findById', () => {
     context('when contact id is provided in search field', () => {
       beforeEach(() => {
-        return resetTable()
+        return resetTable();
       });
       it('should return a contact with given id', () => {
         return findById(1)
@@ -58,7 +60,7 @@ describe('database queries', () => {
   describe('search', () => {
     context('when a string is typed in search field', () => {
       beforeEach(() => {
-        return resetTable()
+        return resetTable();
       });
       it('should return list of contacts that fully or partially match entered string', () => {
         return search('tan')
@@ -72,7 +74,7 @@ describe('database queries', () => {
   describe('create', () => {
     context('when new contact form is submitted', () => {
       beforeEach(() => {
-        return resetTable()
+        return resetTable();
       });
       it('should save new contact in db', () => {
         return create({
@@ -91,7 +93,7 @@ describe('database queries', () => {
   describe('destroy', () => {
     context('when delete button clicked for a contact', () => {
       beforeEach(() => {
-        return resetTable()
+        return resetTable();
       });
       it('should be deleted from db', () => {
         return destroy(1)
