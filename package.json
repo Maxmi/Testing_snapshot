@@ -13,7 +13,8 @@
     "test:db:create": "createdb contacts_test",
     "test:db:load_schema": "psql -d contacts_test < src/models/db/schema/schema.sql",
     "test:db:reset": "npm run test:db:drop && npm run test:db:create && npm run test:db:load_schema",
-    "test": "export NODE_ENV=test && npm run test:db:reset && mocha --recursive --exit"
+    "test": "export NODE_ENV=test && npm run test:db:reset && mocha --recursive --exit",
+    "lint": "eslint *.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "method-override": "^2.3.10",
+    "mocha-phantomjs": "^4.1.0",
     "pg-promise": "^6.2.1"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "mocha": "^4.0.1",
+    "nightmare": "^2.10.0",
     "nodemon": "^1.11.0",
     "pg-monitor": "^0.8.3"
   }

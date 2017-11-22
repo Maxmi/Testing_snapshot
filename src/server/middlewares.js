@@ -1,5 +1,6 @@
 const errorHandler = (error, request, response, next) => {
   response.status(500).send('Something bad happened. This page should be nicer looking');
+  next();
 };
 
 const logErrors = (error, request, response, next) => {

@@ -41,6 +41,9 @@ describe('database queries', () => {
 
   describe('findById', () => {
     context('when contact id is provided in search field', () => {
+      beforeEach(() => {
+        return resetTable()
+      });
       it('should return a contact with given id', () => {
         return findById(1)
           .then((contact) => {
@@ -54,6 +57,9 @@ describe('database queries', () => {
 
   describe('search', () => {
     context('when a string is typed in search field', () => {
+      beforeEach(() => {
+        return resetTable()
+      });
       it('should return list of contacts that fully or partially match entered string', () => {
         return search('tan')
           .then((contacts) => {
@@ -65,15 +71,17 @@ describe('database queries', () => {
 
   describe('create', () => {
     context('when new contact form is submitted', () => {
+      beforeEach(() => {
+        return resetTable()
+      });
       it('should save new contact in db', () => {
         return create({
           first_name: 'test',
           last_name: 'tester'
         })
           .then((contact) => {
-            // expect(contact.first_name).to.eql('test');
-            // expect(contact.last_name).to.eql('tester');
-            expect(contact).to.exist;
+            expect(contact[0].first_name).to.equal('test');
+            expect(contact[0].last_name).to.equal('tester');
           });
       });
     });
@@ -82,10 +90,16 @@ describe('database queries', () => {
 
   describe('destroy', () => {
     context('when delete button clicked for a contact', () => {
+      beforeEach(() => {
+        return resetTable()
+      });
       it('should be deleted from db', () => {
         return destroy(1)
-          .then((contact) => {
-            expect(contact.id).to.equal(undefined);
+          .then(() => {
+            return findAll();
+          })
+          .then(list => {
+            expect(list).to.have.length(2);
           });
       });
     });

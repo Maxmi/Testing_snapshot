@@ -1,131 +1,115 @@
 const chai = require('chai');
-const { expect } = require('chai');
+const {expect} = require('chai');
 const chaiHttp = require('chai-http');
-const { resetTable } = require('../helpers/db');
+
+chai.use(chaiHttp);
+const {resetTable} = require('../helpers/db');
 const app = require('../../src/server');
 
 const router = require('../../src/server/routes');
 
-const {
-  errorHandler,
-  logErrors,
-  notFoundHandler,
-  setDefaultResponseLocals,
-} = require('../../src/server/middlewares');
+// const { errorHandler, logErrors, notFoundHandler, setDefaultResponseLocals } = require('../../src/server/middlewares');
 
-const { renderError } = require('../../src/server/utils');
+// const {renderError} = require('../../src/server/utils');
 
-const {
-  create,
-  findById,
-  findAll,
-  destroy,
-  search,
-} = require('../../src/models/db/contacts');
+// const {create, findById, findAll, destroy, search} = require('../../src/models/db/contacts');
 
+describe('routes', () => {
 
-chai.use(chaiHttp);
-
-describe.only('routes', () => {
-
+  //run while db is empty
   describe('/GET all contacts', () => {
-    context('when user hits / route', () => {
-      it('should render a page with all contacts', () => {
-        return chai.request(app)
-          .get('/')
-          .end((res) => {
-            expect(res).to.have.status(200);
-          });
+
+    context('when db is empty', () => {
+      it('should render an empty page', (done) => {
+        chai.request(app)
+        .get('/')
+        .end((err, res) => {
+          expect(res).to.be.html;
+          expect(res).to.have.status(200);
+          done();
+        });
       });
     });
-  });
+
+    context('when db is not empty', () => {
+      beforeEach(() => {
+        return resetTable()
+      });
+      it('should render all contacts', (done) => {
+        chai.request(app)
+        .get('/')
+        .end((err, res) => {
+          expect(res).to.be.html;
+          expect(res).to.have.status(200);
+          done();
+        });
+      });
+    });
+  }); //describe GET all
 
   describe('/GET new contact', () => {
-    context('when user hits /new route', () => {
-      it('should render a page with new contact form', () => {
-        return chai.request(app)
-          .get('/contacts/new')
-          .end((res) => {
-            expect(res).to.have.status(200);
-          });
+    it('should render a page with new contact form', (done) => {
+      chai.request(app)
+      .get('/contacts/new')
+      .then((res) => {
+        expect(res).to.be.html;
+        expect(res).to.have.status(200);
+        done();
       });
     });
   });
 
-  describe('/POST new contact', () => {
-    context('when form for new contact is submitted', () => {
-      it('should be saved in db and rendered on the page', () => {
-        return chai.request(app)
-          .post('/contacts')
-          .set('content-type', 'application/x-www-form-urlencoded')
-          .type('form')
-          .send({
-            first_name: 'bob',
-            last_name: 'ross',
-          })
-          .end((res) => {
-            expect(res).to.have.status(200);
-            expect(res.bodyParser).to.be.a('object');
-          });
+  describe.only('/POST new contact', () => {
+
+    context('when form is submitted with all inputs filled', () => {
+      it('should create new contact and render it on the page', (done) => {
+         chai.request(app)
+        .post('/contacts')
+        .type('form')
+        .send({first_name: 'bob', last_name: 'ross'})
+        .then((res) => {
+          expect(res).to.redirect;
+          expect(res).to.have.status(200);
+          // expect(res).to.be.a('object');
+          done();
+        });
       });
     });
 
-    context('when one field of the form is empty', () => {
-      it('should NOT be submitted and error message should rendered on the page', () => {
-        return chai.request(app)
-          .post('/contacts')
-          .set('content-type', 'application/x-www-form-urlencoded')
-          .type('form')
-          .send({
-            first_name: 'bob',
-            last_name: '',
-          })
-          .end((res) => {
-            expect(res).to.have.status(304);
-            expect(res.text).to.contain('Last name cannot be blank');
-          });
-      });
-    });
+    // better to test non existing route
+  }); //describe POST
 
+  describe('/GET/:contacts/1', () => {
+    it('should display contact with id 1 on the page', () => {
+      return chai.request(app)
+      .get('/contacts/1')
+      .then(res => {
+        expect(res).to.have.status(200);
+        expect(res).to.be.a('object');
+      })
+    });
   });
 
-  // describe('/GET contact by id', () => {
-  //   context('when user hits route /contacts/1', () => {
-  //     it('should display contact with id 1 on the page', () => {
-  //       return chai.request(app)
-  //       .get('/contacts/1')
-  //       .then(res => {
-  //         // expect(res).to.be.a('');
-  //       })
-  //     });
-  //   });
-  // });
+  describe('/DELETE/:contacts/2', () => {
+      it('should delete contact with id 2', () => {
+        return chai.request(app)
+        .delete('/contacts/2')
+        .then(res => {
+            expect(res).to.have.status(200);
+        })
+      });
+  });
 
-  // describe('/DELETE contact by id', () => {
-  //   context('when delete button in front of a contact clicked', () => {
-  //     it('should delete this contact from db', () => {
-  //       return chai.request(app)
-  //       .delete('/contacts/1')
-  //       .then(res => {
-  //         // expect(res).to.be.a('');
-  //       })
-  //     });
-  //   });
-  // });
-
-  // describe('/GET search', () => {
-  //   context('when a string is entered into search field', () => {
-  //     it('should return contacts matching this string from db and display on the page', () => {
-  //       const searchTerm = 'test'
-  //       return chai.request(app)
-  //       .get(`/contacts/search?q=${searchTerm}`)
-  //       .then(res => {
-  //         // expect(res).to.be.a('');
-  //       })
-  //     });
-  //   });
-  // });
-
+  describe('/GET search', () => {
+    it('should return contacts matching search string if they exist', () => {
+      return chai.request(app)
+        .get('/contacts/search?q=te')
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.a('object');
+        });
+    });
+  });
 
 });
-//end of most outer describe
+// end of most outer describe
