@@ -86,13 +86,6 @@ describe('Nightmare tests', function () {
 
   describe('deleting contact', function () {
 
-    // const nightmare = Nightmare({
-    //   webPreferences: {
-    //     preload: path.resolve('../../public/script.js')
-    //   }
-    // });
-    //
-
     it('should delete the contact and redirect to contacts page', function (done) {
         nightmare
         .goto(`${url}/contacts/new`)
