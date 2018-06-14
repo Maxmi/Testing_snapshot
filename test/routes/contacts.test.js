@@ -65,18 +65,6 @@ describe('routes', () => {
     });
   });
 
-  // describe.only('/GET non-existing route', () => {
-  //     it('should render Page Not found', (done) => {
-  //       chai.request(app)
-  //       .get('/hello')
-  //       .then((res) => {
-  //         // expect(res).to.be.html;
-  //         expect(res).to.have.status(404);
-  //         done();
-  //       });
-  //   });
-  // });
-
   describe('/GET/:contacts/1', () => {
     beforeEach(() => {
       return resetTable()

@@ -6,10 +6,10 @@
   "scripts": {
     "start": "node src/server.js",
     "start:dev": "nodemon src/server.js",
-    "db:reset": "dropdb contacts_development && createdb contacts_development && npm run load_schema",
+    "db:reset": "dropdb contacts_development --if-exists && createdb contacts_development",
     "load_schema": "psql -d contacts_development < src/models/db/schema/schema.sql",
     "load_contacts": "psql -d contacts_development < test/seed/contacts.sql",
-    "test:db:drop": "dropdb contacts_test",
+    "test:db:drop": "dropdb contacts_test --if-exists",
     "test:db:create": "createdb contacts_test",
     "test:db:load_schema": "psql -d contacts_test < src/models/db/schema/schema.sql",
     "test:db:reset": "npm run test:db:drop && npm run test:db:create && npm run test:db:load_schema",
@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "ejs": "^2.6.1",
     "express": "^4.15.2",
     "method-override": "^2.3.10",
     "pg-promise": "^6.2.1"

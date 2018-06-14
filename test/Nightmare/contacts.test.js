@@ -52,7 +52,7 @@ describe('Nightmare tests', function () {
       nightmare
         .goto(`${url}/contacts/new`)
         .evaluate(() => {
-          return document.getElementById('new'); //added Id into html
+          return document.getElementById('new');
         })
         .end()
         .then(form => {
@@ -72,12 +72,11 @@ describe('Nightmare tests', function () {
         .click('#addContact') //added Id into html
         .wait(5000)
         .evaluate(() => {
-          return document.querySelectorAll('.page-column-content > h1')[0].innerHTML; //innerText not working
+          return document.querySelectorAll('.page-column-content > h1')[0].innerHTML;
         })
         .end()
         .then(result => {
           expect(result).to.equal('test&nbsp;tester');
-          // expect(result).to.equal('test tester'); //not working
           done();
         })
         .catch(done);
@@ -91,9 +90,9 @@ describe('Nightmare tests', function () {
         .goto(`${url}/contacts/new`)
         .type('input[name="first_name"]','test')
         .type('input[name="last_name"]','tester')
-        .click('#addContact') //added Id into html
+        .click('#addContact') 
         .wait(3000)
-        .click('#deleteCont') //added Id into html
+        .click('#deleteCont') 
         //finding popup window and cliking OK button
         .on('page', function(type="confirm", message, response) {
           window.__nightmare = {};
